@@ -13,7 +13,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 //module mongoose
-require("./plugin/mongoose/mongoose");
+require("./plugins/mongoose/mongoose.js");
 
 //ajout des modules et extensions dans l'App
 app.use(cors());
@@ -21,8 +21,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 //import des routes
+const authRouter = require("./plugins/routes/auth.js");
 
 //ajout des routes
+app.use("/auth", authRouter);
 
 //export de l'App
 module.exports = app;
