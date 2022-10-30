@@ -5,8 +5,15 @@ const authRouter = express.Router();
 const Auth = require("../../middlewareAndControler/auth/auth");
 const AuthPassword = require("../../middlewareAndControler/auth/authPasword");
 const AuthValidator = require("../../middlewareAndControler/auth/authValidator");
+const TokenHelpers = require("../../middlewareAndControler/auth/tokenHelpers");
 
 authRouter.post("/login", AuthValidator.login, Auth.login);
+
+authRouter.get(
+  "/loginWithToken",
+  TokenHelpers.verifyTokenId,
+  Auth.loginWithToken
+);
 
 authRouter.post("/reset", (req, res) => {
   res.send({ success: true, message: "reset" });

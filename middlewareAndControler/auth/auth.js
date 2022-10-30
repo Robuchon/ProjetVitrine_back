@@ -18,13 +18,13 @@ const Auth = {
         return res.status(400).send({
           success: false,
           data: err,
-          errors: { email: "error", name: "error" },
+          errors: { email: "error", username: "error" },
         });
       });
   },
 
   async login(req, res) {
-    const email = req.body.email;
+    const username = req.body.username;
     let password = "";
     if (req.body.passwordNoHash) {
       password = req.body.passwordNoHash;
@@ -32,13 +32,13 @@ const Auth = {
       password = req.body.password;
     }
 
-    return UserModel.findOne({ email: email })
+    return UserModel.findOne({ username: username })
       .select("+password")
       .then((user) => {
         if (user === null) {
           return res.status(401).send({
             success: false,
-            errors: { email: "Informations de connexion incorrectes" },
+            errors: { username: "Informations de connexion incorrectes" },
           });
         }
         let passwordsDoMatch = bcrypt.compareSync(
@@ -49,9 +49,17 @@ const Auth = {
         if (!passwordsDoMatch) {
           return res.status(401).send({
             success: false,
-            errors: { email: "Informations de connexion incorrectes" },
+            errors: { username: "Informations de connexion incorrectes" },
           });
         } else {
+          let data = {
+            prologue: user.prologue,
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            theme: user.theme,
+            language: user.language,
+          };
           jwt.sign(
             { _id: user._id },
             JWT_KEY,
@@ -62,12 +70,34 @@ const Auth = {
                 token: token,
                 success: true,
                 message: "Login ok",
+                data: data,
               });
             }
           );
         }
       })
       .catch((err) => console.log("pas cool", err));
+  },
+  async loginWithToken(req, res) {
+    UserModel.findOne({ _id: req.decodedToken._id })
+      .exec((err, user) => {
+        if (err)
+          return res.status(400).send({
+            success: false,
+            message: "Erreur data user",
+          });
+        if (user === null) {
+          return res.status(400).send({
+            success: false,
+            message: "Erreur user delete",
+          });
+        }
+        return res.status(200).send({
+          success: true,
+          message: "Ok data user",
+          data: user,
+        });
+      });
   },
 };
 

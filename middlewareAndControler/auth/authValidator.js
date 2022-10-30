@@ -5,6 +5,7 @@ const AuthValidator = {
     let errors = {};
     let { username, email, password } = req.body;
     if (!username || !email || !password) {
+      errors["username"] = true;
       errors["email"] = true;
     }
     if (!validator.default.isEmail(email)) {
@@ -24,21 +25,21 @@ const AuthValidator = {
   },
 
   login(req, res, next) {
-    let { email, password } = req.body;
-    if (!email || !password) {
+    let { username, password } = req.body;
+    if (!username || !password) {
       return res.status(400).send({
         success: false,
         errors: {
-          email: true,
+          username: true,
           password: true,
         },
       });
     }
-    if (!validator.default.isEmail(email)) {
+    if (!validator.default.isAlphanumeric(username, ["fr-FR"])) {
       return res.status(400).send({
         success: false,
         errors: {
-          email: true,
+          username: true,
         },
       });
     }

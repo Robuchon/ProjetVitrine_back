@@ -22,9 +22,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 //import des routes
 const authRouter = require("./plugins/routes/auth.js");
+const userSettingsRouter = require("./plugins/routes/userSettings.js");
 
 //ajout des routes
 app.use("/auth", authRouter);
+app.use("/userSettings", userSettingsRouter);
 
 //export de l'App
 module.exports = app;
