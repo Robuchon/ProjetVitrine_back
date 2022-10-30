@@ -22,6 +22,28 @@ const userSchema = mongoose.Schema(
       require: true,
       select: false,
     }, //String Hasher
+    prologue: {
+      type: Boolean,
+      default: false,
+    },
+    prologueEtape: {
+      type: Number,
+      default: 1,
+    },
+    language: {
+      type: String,
+      default: "fr",
+    },
+    theme: {
+      type: String,
+      default: "dark",
+    },
+    gladiator: [
+      {
+        type: mongoose.ObjectId,
+        ref: "gladiator",
+      },
+    ],
   },
   {
     timestamps: true,
